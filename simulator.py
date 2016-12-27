@@ -37,8 +37,7 @@ TESTS = [
     "marked_backward",
     "flag_a",
     "flag_b",
-    "random_choice()",
-    "true"
+    "random_choice()"
 ]
 
 
@@ -120,7 +119,7 @@ class Simulator:
         self.cur_dir = Direction.DOWN
         self.cur_i = self.start_i
         self.cur_j = self.start_j
-        self.true = self.can_move_forward = True
+        self.can_move_forward = True
         self.can_move_backward = False
         self.flag_a = self.flag_b = None
         self.marked_current = self.marked_backward = self.marked_forward = False
