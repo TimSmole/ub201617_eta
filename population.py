@@ -1,6 +1,6 @@
 from random import randint
 
-from simulator import get_parser, vector_to_prog
+from simulator import get_parser
 
 
 class Population:
