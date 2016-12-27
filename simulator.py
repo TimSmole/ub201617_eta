@@ -118,7 +118,8 @@ class Simulator:
         self.cur_i = self.start_i
         self.cur_j = self.start_j
         self.can_move_forward = True
-        self.can_move_backward = self.flag_a = self.flag_b = False
+        self.can_move_backward = False
+        self.flag_a = self.flag_b = None
         self.marked_current = self.marked_backward = self.marked_forward = False
         self.prev_dist_to_goal = self.dist_to_goal()
 
@@ -156,23 +157,20 @@ class Simulator:
         self.update_move_counter()
 
     def set_flag_a(self):
-        # TODO: WTF JE POINT?
-        self.flag_a = True
+        self.flag_a = (self.cur_i, self.cur_j)
         self.update_move_counter()
 
     def clear_flag_a(self):
-        # TODO: WTF JE POINT?
-        self.flag_a = False
+        self.flag_a = None
         self.update_move_counter()
 
     def set_flag_b(self):
         # TODO: WTF JE POINT?
-        self.flag_b = True
+        self.flag_b = (self.cur_i, self.cur_j)
         self.update_move_counter()
 
-    def clear_flag_a(self):
-        # TODO: WTF JE POINT?
-        self.flag_b = False
+    def clear_flag_b(self):
+        self.flag_b = None
         self.update_move_counter()
 
     def nop(self):
