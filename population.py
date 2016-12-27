@@ -1,6 +1,4 @@
-from random import randint
-
-from simulator import get_parser
+from agent import Agent
 
 
 class Population:
@@ -10,9 +8,7 @@ class Population:
         self.agents = None
 
     def generate_agents(self):
-        cmds = get_parser()
-        return [[randint(0, len(cmds) - 1) for _ in range(self.agent_size)]
-                for _ in range(self.population_size)]
+        self.agents = [Agent.generate_random(self.agent_size) for _ in range(self.population_size)]
 
     def crossover(self):
         pass

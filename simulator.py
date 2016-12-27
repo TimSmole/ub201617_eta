@@ -4,96 +4,10 @@ from math import sqrt
 
 from enum import Enum
 
-import numpy as np
 import time
 import random
-import itertools
 import os
 import sys
-
-# legal commands and tests
-# students can (and should) add additional moves and tests
-CMDS = [
-    "nop()",
-    "move_forward()",
-    "move_backward()",
-    "turn_left()",
-    "turn_right()",
-    "set_flag_a()",
-    "clear_flag_a()",
-    "set_flag_b()",
-    "clear_flag_b()",
-    "mark_position()",
-    "unmark_position()",
-    "go_to_flag_a()",
-    "go_to_flag_b()"
-]
-TESTS = [
-    "getting_closer()",
-    "can_move_forward",
-    "can_move_backward",
-    "marked_current",
-    "marked_forward",
-    "marked_backward",
-    "flag_a",
-    "flag_b",
-    "random_choice()"
-]
-
-
-def get_parser():
-    parse_dict = dict()
-
-    for i, c in enumerate(CMDS):
-        parse_dict[i] = "%s\n" % c
-
-    i += 1
-    for j, t in enumerate([ti for ti in itertools.product(TESTS, CMDS)]):
-        parse_dict[i + j] = "if %s: %s\n" % (t[0], t[1])
-
-    i = i + j + 1
-    for j, t in enumerate([ti for ti in itertools.product(TESTS, CMDS)]):
-        parse_dict[i + j] = "if not %s: %s\n" % (t[0], t[1])
-    return parse_dict
-
-
-def prog_to_executable(p):
-    out = []
-    for l in p:
-        for r in CMDS + TESTS:
-            l = l.replace(' ' + r, " sim." + r)
-            if l.startswith(r):
-                l = 'sim.' + r + l[len(r):]
-        out.append(l)
-    return out
-
-
-def prog_to_vector(p):
-    v = np.zeros((len(p),), dtype=int)
-    pd_inv = {replace_new_line(v): k for k, v in pd.items()}
-    for i, line in enumerate(p):
-        try:
-            line = replace_new_line(line)
-            v[i] = pd_inv[line]
-        except:
-            raise Exception("Illegal program")
-    return v
-
-
-def replace_new_line(s):
-    s = s.replace("\n", "")
-    s = s.replace("\r", "")
-    return s
-
-
-def vector_to_prog(v):
-    try:
-        return [pd[i] for i in v]
-    except:
-        raise Exception("Illegal vector")
-
-
-pd = get_parser()
 
 
 class Direction(Enum):
@@ -253,7 +167,7 @@ class FoundGoalException(Exception):
         return repr(self.value)
 
 
-def simulate(input_maze, program, graphics=False, verbose=False, max_iter=100, max_len=100,
+def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max_len=100,
              delay=1.0, seed=0):
     '''
         program can be a path to file, string or vector
@@ -261,20 +175,11 @@ def simulate(input_maze, program, graphics=False, verbose=False, max_iter=100, m
     '''
     sim = Simulator(input_maze, seed)
 
-    if isinstance(program, str):
-        if os.path.exists(program):
-            prog = open(program).readlines()
-        else:
-            prog = program
-            prog = map(lambda x: x + '\n', filter(None, prog.split('\n')))
-    else:
-        prog = vector_to_prog(program)
-
-    v = prog_to_vector(prog)
+    v = agent.to_vector()
     if len(v) > max_len:
         raise Exception("Illegal program length")
 
-    prog = prog_to_executable(prog)  # add sim.
+    prog = agent.to_executable()  # add sim.
 
     try:
         one_step = compile("\n".join(prog) + "\n", "<string>", "exec")
