@@ -24,7 +24,9 @@ CMDS = [
     "set_flag_b()",
     "clear_flag_b()",
     "mark_position()",
-    "unmark_position()"
+    "unmark_position()",
+    "go_to_flag_a()",
+    "go_to_flag_b()"
 ]
 TESTS = [
     "getting_closer()",
@@ -35,7 +37,8 @@ TESTS = [
     "marked_backward",
     "flag_a",
     "flag_b",
-    "random_choice()"
+    "random_choice()",
+    "true"
 ]
 
 
@@ -117,7 +120,7 @@ class Simulator:
         self.cur_dir = Direction.DOWN
         self.cur_i = self.start_i
         self.cur_j = self.start_j
-        self.can_move_forward = True
+        self.true = self.can_move_forward = True
         self.can_move_backward = False
         self.flag_a = self.flag_b = None
         self.marked_current = self.marked_backward = self.marked_forward = False
@@ -165,12 +168,21 @@ class Simulator:
         self.update_move_counter()
 
     def set_flag_b(self):
-        # TODO: WTF JE POINT?
         self.flag_b = (self.cur_i, self.cur_j)
         self.update_move_counter()
 
     def clear_flag_b(self):
         self.flag_b = None
+        self.update_move_counter()
+
+    def go_to_flag_a(self):
+        self.cur_i = self.flag_a[0]
+        self.cur_j = self.flag_a[1]
+        self.update_move_counter()
+
+    def go_to_flag_b(self):
+        self.cur_i = self.flag_b[0]
+        self.cur_j = self.flag_b[1]
         self.update_move_counter()
 
     def nop(self):
