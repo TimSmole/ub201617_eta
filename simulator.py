@@ -73,29 +73,37 @@ class Simulator:
         self.update_move_counter()
 
     def set_flag_a(self):
+        """Sets flag A to current position"""
         self.flag_a = (self.cur_i, self.cur_j)
         self.update_move_counter()
 
     def clear_flag_a(self):
+        """Clears flag A"""
         self.flag_a = None
         self.update_move_counter()
 
     def set_flag_b(self):
+        """Sets flag B to current position"""
         self.flag_b = (self.cur_i, self.cur_j)
         self.update_move_counter()
 
     def clear_flag_b(self):
+        """Clears flag B"""
         self.flag_b = None
         self.update_move_counter()
 
     def go_to_flag_a(self):
-        self.cur_i = self.flag_a[0]
-        self.cur_j = self.flag_a[1]
+        """Jumps to position defined by flag A"""
+        if self.flag_a is not None:
+            self.cur_i = self.flag_a[0]
+            self.cur_j = self.flag_a[1]
         self.update_move_counter()
 
     def go_to_flag_b(self):
-        self.cur_i = self.flag_b[0]
-        self.cur_j = self.flag_b[1]
+        """Jumps to position defined by flag B"""
+        if self.flag_b is not None:
+            self.cur_i = self.flag_b[0]
+            self.cur_j = self.flag_b[1]
         self.update_move_counter()
 
     def nop(self):

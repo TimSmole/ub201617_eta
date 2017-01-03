@@ -10,15 +10,15 @@ class Mutation(Enum):
 
 class Population:
 
-    def __init__(self, population_size=10, agent_size=20, mutation=Mutation.RANDOM):
-        """Variables"""
+    def __init__(self, population_size=10, agent_size=20, tournament_size=5,
+                 mutation=Mutation.RANDOM, mutation_rate=0.015, elitism=True):
         self.population_size = population_size
         self.agent_size = agent_size
         self.agents = None
-        self.mutation_rate = 0.015
+        self.mutation_rate = mutation_rate
         self.mutation = mutation
-        self.tournament_size = 5
-        self.enable_elitism = True
+        self.tournament_size = tournament_size
+        self.enable_elitism = elitism
         self.cmd_size = Agent.get_parser()
 
     def generate_agents(self):
@@ -58,7 +58,7 @@ class Population:
         return child
 
     def return_best(self, candidates):
-        return sorted(candidates, key=lambda x: x.compute_fitness(), reverse=True)[0]
+        return sorted(candidates, key=lambda x: x.fitness, reverse=True)[0]
 
     def mutate(self, agent):
         if self.mutation == Mutation.RANDOM:
