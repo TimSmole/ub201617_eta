@@ -40,20 +40,20 @@ class Population:
         self.agents = new_agents
 
     def cross_agents(self, parent_a, parent_b):
-        child = [0 ** self.agent_size]
-        start_pos = randint(0, self.agent_size)
-        end_pos = randint(0, self.agent_size)
+        child = Agent([0 for _ in range(self.agent_size)])
+        start_pos = randint(0, self.agent_size - 1)
+        end_pos = randint(0, self.agent_size - 1)
         for i in range(0, self.agent_size):
             if start_pos < end_pos and i > start_pos and i < end_pos:
-                child[i] = parent_a[i]
+                child.vector[i] = parent_a.vector[i]
             elif start_pos > end_pos:
                 if not (i < start_pos and i > end_pos):
-                    child[i] = parent_a[i]
+                    child.vector[i] = parent_a.vector[i]
         for i in range(0, self.agent_size):
-            if not parent_b[i] in child:
-                for ii in range(0, len(child)):
-                    if child[ii] == 0:
-                        child[ii] = parent_b[i]
+            if not parent_b.vector[i] in child.vector:
+                for ii in range(0, len(child.vector)):
+                    if child.vector[ii] == 0:
+                        child.vector[ii] = parent_b.vector[i]
                         break
         return child
 
@@ -63,24 +63,24 @@ class Population:
     def mutate(self, agent):
         if self.mutation == Mutation.RANDOM:
             max_command = len(agent.get_parser())
-            for i in range(0, len(agent.program)):
+            for i in range(0, len(agent.vector)):
                 if uniform(0, 1) > self.mutation_rate:
-                    agent.program[i] = randint(0, max_command)
+                    agent.vector[i] = randint(0, max_command - 1)
             return agent
         elif self.mutation == Mutation.SWAP:
             for cursor in range(0, self.agent_size):
                 if uniform(0, 1) < self.mutation_rate:
-                    change_position = randint(0, self.agent_size)
-                    swap_a = agent[cursor]
-                    swap_b = agent[change_position]
-                    agent[cursor] = swap_b
-                    agent[change_position] = swap_a
+                    change_position = randint(0, self.agent_size - 1)
+                    swap_a = agent.vector[cursor]
+                    swap_b = agent.vector[change_position]
+                    agent.vector[cursor] = swap_b
+                    agent.vector[change_position] = swap_a
             return agent
 
     def tournament_selection(self):
         tournament = []
         for i in range(0, self.tournament_size):
-            random_id = randint(0, self.population_size)
+            random_id = randint(0, self.population_size - 1)
             tournament.append(self.agents[random_id])
         fittest = self.return_best(tournament)
         return fittest
