@@ -141,11 +141,17 @@ class Simulator:
         backward_coordinates = self.move(Direction.get_opposite(self.cur_dir))
         self.can_move_forward = self.check_can_move_to_coordinates(forward_coordinates)
         self.can_move_backward = self.check_can_move_to_coordinates(backward_coordinates)
-        self.marked_current = self.maze[self.cur_i][self.cur_j] == -1
-        self.marked_forward = self.maze[forward_coordinates[0]][forward_coordinates[1]] == -1
-        self.marked_backward = self.maze[backward_coordinates[0]][backward_coordinates[1]] == -1
+        self.marked_current = self.get_marked_flag(self.cur_i, self.cur_j)
+        self.marked_forward = self.get_marked_flag(forward_coordinates[0], forward_coordinates[1])
+        self.marked_backward = self.get_marked_flag(backward_coordinates[0], backward_coordinates[1])
         self.prev_dist_to_goal = self.dist_to_goal()
         self.move_counter += 1
+
+    def get_marked_flag(self, x, y):
+        try:
+            return self.maze[x][y] == -1
+        except IndexError:
+            return False
 
     def check_end(self):
         if self.cur_i == self.end_i and self.cur_j == self.end_j:
