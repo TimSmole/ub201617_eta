@@ -58,7 +58,7 @@ class Agent:
          try running the script from the terminal instead of PyCharm."""
         af = 0
         for m in mazes.mazes_train:
-            af += simulate(m, self, verbose=True, graphics=False, delay=0.1, max_iter=500)
+            af += simulate(m, self, verbose=False, graphics=False, delay=0.1, max_iter=500)
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness
 

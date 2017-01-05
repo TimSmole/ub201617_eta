@@ -2,11 +2,12 @@
 import operator
 from math import sqrt
 
+import matplotlib
 from enum import Enum
+import numpy as np
 
 import time
 import random
-import os
 import sys
 
 
@@ -38,6 +39,8 @@ class Simulator:
         self.flag_a = self.flag_b = None
         self.marked_current = self.marked_backward = self.marked_forward = False
         self.prev_dist_to_goal = self.dist_to_goal()
+
+        self.marked_positions = np.array([self.start_i, self.start_j])
 
         # Initialize random generator
         # a fixed random generator
@@ -113,6 +116,8 @@ class Simulator:
     def mark_position(self):
         """mark current position in maze"""
         self.maze[self.cur_i][self.cur_j] = -1
+        #FIXME:TIM
+        # self.marked_positions = np.vstack([self.marked_positions, [self.cur_i, self.cur_j]])
         self.update_move_counter()
 
     def unmark_position(self):
@@ -143,7 +148,8 @@ class Simulator:
         self.can_move_backward = self.check_can_move_to_coordinates(backward_coordinates)
         self.marked_current = self.get_marked_flag(self.cur_i, self.cur_j)
         self.marked_forward = self.get_marked_flag(forward_coordinates[0], forward_coordinates[1])
-        self.marked_backward = self.get_marked_flag(backward_coordinates[0], backward_coordinates[1])
+        self.marked_backward = self.get_marked_flag(backward_coordinates[0],
+                                                    backward_coordinates[1])
         self.prev_dist_to_goal = self.dist_to_goal()
         self.move_counter += 1
 
@@ -201,6 +207,7 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
         raise Exception("Compilation error")
 
     if graphics:
+        matplotlib.use('Agg')
         import pylab as plt
         plt.ion()
         markers = {Direction.UP: '^', Direction.DOWN: 'v', Direction.LEFT: '<',

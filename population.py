@@ -9,16 +9,15 @@ class Mutation(Enum):
 
 
 class Population:
-
     def __init__(self, population_size=10, agent_size=20, tournament_size=5,
-                 mutation=Mutation.RANDOM, mutation_rate=0.015, elitism=True):
+                 mutation=Mutation.RANDOM, mutation_rate=0.015, elite_size=1):
         self.population_size = population_size
         self.agent_size = agent_size
         self.agents = None
         self.mutation_rate = mutation_rate
         self.mutation = mutation
         self.tournament_size = tournament_size
-        self.enable_elitism = elitism
+        self.elite_size = elite_size
         self.cmd_size = Agent.get_parser()
 
     def generate_agents(self):
@@ -26,16 +25,14 @@ class Population:
 
     def evolve(self):
         new_agents = []
-        elitism_offset = 0
-        if self.enable_elitism:
+        for _ in range(self.elite_size):
             new_agents.append(self.return_best(self.agents))
-            elitism_offset = 1
-        for i in range(elitism_offset, self.population_size):
+        for _ in range(self.elite_size, self.population_size):
             parent1 = self.tournament_selection()
             parent2 = self.tournament_selection()
             child = self.cross_agents(parent1, parent2)
             new_agents.append(child)
-        for i in range(elitism_offset, self.population_size):
+        for i in range(self.elite_size, self.population_size):
             new_agents[i] = self.mutate(new_agents[i])
         self.agents = new_agents
 
@@ -44,10 +41,10 @@ class Population:
         start_pos = randint(0, self.agent_size - 1)
         end_pos = randint(0, self.agent_size - 1)
         for i in range(0, self.agent_size):
-            if start_pos < end_pos and i > start_pos and i < end_pos:
+            if start_pos < end_pos and start_pos < i < end_pos:
                 child.vector[i] = parent_a.vector[i]
             elif start_pos > end_pos:
-                if not (i < start_pos and i > end_pos):
+                if not (start_pos > i > end_pos):
                     child.vector[i] = parent_a.vector[i]
         for i in range(0, self.agent_size):
             if not parent_b.vector[i] in child.vector:
@@ -57,7 +54,8 @@ class Population:
                         break
         return child
 
-    def return_best(self, candidates):
+    @staticmethod
+    def return_best(candidates):
         return sorted(candidates, key=lambda x: x.fitness, reverse=True)[0]
 
     def mutate(self, agent):
