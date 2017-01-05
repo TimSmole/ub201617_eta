@@ -20,6 +20,9 @@ for i in range(number_of_generations):
     print("Population fitness: " + str(population_fitness))
 
     population.evolve()
-    break
+
 print("========================== FINISHED ==========================")
 print("Execution time: " + str(time.time() - start))
+
+best = population.return_best(population.agents)
+best.solve_mazes()

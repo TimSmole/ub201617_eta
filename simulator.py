@@ -185,7 +185,7 @@ class FoundGoalException(Exception):
 
 
 def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max_len=100,
-             delay=1.0, seed=0):
+             delay=0.01, seed=0):
     '''
         program can be a path to file, string or vector
         return fitness value
@@ -224,11 +224,12 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
             plt.clf()
             plt.imshow(sim.maze, cmap=plt.cm.binary, interpolation='nearest')
             try:
-                x = sim.marked_positions[:, 0]
-                y = sim.marked_positions[:, 1]
+                x = sim.marked_positions[:, 1]
+                y = sim.marked_positions[:, 0]
             except IndexError:
-                x = sim.marked_positions[0]
-                y = sim.marked_positions[1]
+                print("tukej")
+                x = sim.marked_positions[1]
+                y = sim.marked_positions[0]
             plt.plot(x, y, 'cs', markersize=8.0, markerfacecolor="c")
             plt.plot(sim.cur_j, sim.cur_i, markers[sim.cur_dir], markersize=8.0,
                      markerfacecolor="g")
@@ -236,7 +237,7 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
                 plt.plot(0, -1.2, 'go', markersize=8.0, markerfacecolor="g")
             if sim.flag_b:
                 plt.plot(1, -1.2, 'bo', markersize=8.0, markerfacecolor="b")
-            plt.pause(0.05)
+            plt.pause(0.0001)
             time.sleep(delay)
     if verbose:
         print("Iteration limit exceed: Failed to find path through maze. Fitness: ", sim.fitness())

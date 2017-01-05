@@ -51,16 +51,19 @@ class Agent:
     def to_executable(self):
         return Agent.program_to_executable(Agent.vector_to_program(self.vector))
 
-    def compute_fitness(self):
+    def compute_fitness(self, graphics=False):
         """Simulate and visualize some mazes.
          The function simulate can operate on files, programs or vectors.
          If you have problems with visualization (i.e. are a Mac user),
          try running the script from the terminal instead of PyCharm."""
         af = 0
         for m in mazes.mazes_train:
-            af += simulate(m, self, verbose=False, graphics=False, delay=0.1, max_iter=500)
+            af += simulate(m, self, verbose=False, graphics=graphics, max_iter=100)
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness
+
+    def solve_mazes(self):
+        self.compute_fitness(graphics=True)
 
     @staticmethod
     def generate_random(agent_size):
