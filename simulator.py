@@ -4,7 +4,7 @@ import random
 import sys
 import time
 from math import sqrt
-
+import matplotlib
 import pylab as plt
 import numpy as np
 from enum import Enum
@@ -204,6 +204,7 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
         raise Exception("Compilation error")
 
     if graphics:
+        matplotlib.use('Agg')
         plt.ion()
         markers = {Direction.UP: '^', Direction.DOWN: 'v', Direction.LEFT: '<',
                    Direction.RIGHT: '>'}
@@ -235,7 +236,7 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
                 plt.plot(0, -1.2, 'go', markersize=8.0, markerfacecolor="g")
             if sim.flag_b:
                 plt.plot(1, -1.2, 'bo', markersize=8.0, markerfacecolor="b")
-            plt.draw()
+            plt.pause(0.05)
             time.sleep(delay)
     if verbose:
         print("Iteration limit exceed: Failed to find path through maze. Fitness: ", sim.fitness())

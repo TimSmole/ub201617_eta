@@ -31,9 +31,7 @@ class Population:
             parent1 = self.tournament_selection()
             parent2 = self.tournament_selection()
             child = self.cross_agents(parent1, parent2)
-            new_agents.append(child)
-        for i in range(self.elite_size, self.population_size):
-            new_agents[i] = self.mutate(new_agents[i])
+            new_agents.append(self.mutate(child))
         self.agents = new_agents
 
     def cross_agents(self, parent_a, parent_b):
@@ -62,7 +60,7 @@ class Population:
         if self.mutation == Mutation.RANDOM:
             max_command = len(agent.get_parser())
             for i in range(0, len(agent.vector)):
-                if uniform(0, 1) > self.mutation_rate:
+                if uniform(0, 1) < self.mutation_rate:
                     agent.vector[i] = randint(0, max_command - 1)
             return agent
         elif self.mutation == Mutation.SWAP:
