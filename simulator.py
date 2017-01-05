@@ -1,14 +1,13 @@
 # generate maze
 import operator
-from math import sqrt
-
-import matplotlib
-from enum import Enum
-import numpy as np
-
-import time
 import random
 import sys
+import time
+from math import sqrt
+
+import pylab as plt
+import numpy as np
+from enum import Enum
 
 
 class Direction(Enum):
@@ -115,9 +114,7 @@ class Simulator:
 
     def mark_position(self):
         """mark current position in maze"""
-        self.maze[self.cur_i][self.cur_j] = -1
-        #FIXME:TIM
-        # self.marked_positions = np.vstack([self.marked_positions, [self.cur_i, self.cur_j]])
+        self.marked_positions = np.vstack([self.marked_positions, [self.cur_i, self.cur_j]])
         self.update_move_counter()
 
     def unmark_position(self):
@@ -207,8 +204,6 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
         raise Exception("Compilation error")
 
     if graphics:
-        matplotlib.use('Agg')
-        import pylab as plt
         plt.ion()
         markers = {Direction.UP: '^', Direction.DOWN: 'v', Direction.LEFT: '<',
                    Direction.RIGHT: '>'}
@@ -227,8 +222,13 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
         if graphics:
             plt.clf()
             plt.imshow(sim.maze, cmap=plt.cm.binary, interpolation='nearest')
-            plt.plot(sim.marked_positions.T.nonzero()[0], sim.marked_positions.T.nonzero()[1], 'cs',
-                     markersize=8.0, markerfacecolor="c")
+            try:
+                x = sim.marked_positions[:, 0]
+                y = sim.marked_positions[:, 1]
+            except IndexError:
+                x = sim.marked_positions[0]
+                y = sim.marked_positions[1]
+            plt.plot(x, y, 'cs', markersize=8.0, markerfacecolor="c")
             plt.plot(sim.cur_j, sim.cur_i, markers[sim.cur_dir], markersize=8.0,
                      markerfacecolor="g")
             if sim.flag_a:
