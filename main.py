@@ -1,32 +1,33 @@
 import time
 
-import mazes
 from population import Population
-from simulator import simulate
 
 start = time.time()
 
-population_size = 10
+population_size = 200
+agent_size = 20
 number_of_generations = 10
+elite_size = 5
 
-population = Population(population_size=population_size)
+population = Population(population_size=population_size, agent_size=agent_size,
+                        elite_size=elite_size)
 population.generate_agents()
 
-a = population.agents[0]
-print("".join(a.to_program()))
-
-
 # FIXME: ==========REMOVE ==========
-import pylab as plt
-plt.ion()
-plt.clf()
-print(mazes.mazes_train[0])
-plt.imshow(mazes.mazes_train[0][4], cmap=plt.cm.binary, interpolation='nearest')
-plt.pause(0.01)
-
-simulate(mazes.mazes_train[0], a, verbose=False, graphics=True, delay=0.1, max_iter=10)
-exit()
-
+# a = population.agents[0]
+# print("".join(a.to_program()))
+#
+# import pylab as plt
+# import mazes
+# from simulator import simulate
+#
+# plt.ion()
+# plt.clf()
+# plt.imshow(mazes.mazes_train[0][4], cmap=plt.cm.binary, interpolation='nearest')
+# plt.pause(0.01)
+#
+# simulate(mazes.mazes_train[0], a, verbose=False, graphics=True, delay=0.1, max_iter=10)
+# exit()
 
 for i in range(number_of_generations):
     print("========================== GENERATION " + str(i) + " ==========================")
@@ -43,4 +44,9 @@ print("========================== FINISHED ==========================")
 print("Execution time: " + str(time.time() - start))
 
 best = population.return_best(population.agents)
+print("==== BEST AGENT ====")
+f = open('./out/best_agent.txt', 'w+')
+f.write("".join(best.to_program()))
+f.flush()
+print("".join(best.to_program()))
 best.solve_mazes()

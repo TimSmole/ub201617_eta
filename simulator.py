@@ -39,7 +39,7 @@ class Simulator:
         self.marked_current = self.marked_backward = self.marked_forward = False
         self.prev_dist_to_goal = self.dist_to_goal()
 
-        self.marked_positions = np.array([self.start_i, self.start_j])
+        self.marked_positions = np.array([[self.start_i, self.start_j]])
 
         # Initialize random generator
         # a fixed random generator
@@ -67,32 +67,42 @@ class Simulator:
     def turn_left(self):
         """change direction of agent"""
         self.cur_dir = Direction.LEFT
-        self.update_move_counter()
+        self.update_flags()
 
     def turn_right(self):
         """change direction of agent"""
         self.cur_dir = Direction.RIGHT
-        self.update_move_counter()
+        self.update_flags()
+
+    def turn_up(self):
+        """change direction of agent"""
+        self.cur_dir = Direction.UP
+        self.update_flags()
+
+    def turn_down(self):
+        """change direction of agent"""
+        self.cur_dir = Direction.DOWN
+        self.update_flags()
 
     def set_flag_a(self):
         """Sets flag A to current position"""
         self.flag_a = (self.cur_i, self.cur_j)
-        self.update_move_counter()
+        self.update_flags()
 
     def clear_flag_a(self):
         """Clears flag A"""
         self.flag_a = None
-        self.update_move_counter()
+        self.update_flags()
 
     def set_flag_b(self):
         """Sets flag B to current position"""
         self.flag_b = (self.cur_i, self.cur_j)
-        self.update_move_counter()
+        self.update_flags()
 
     def clear_flag_b(self):
         """Clears flag B"""
         self.flag_b = None
-        self.update_move_counter()
+        self.update_flags()
 
     def go_to_flag_a(self):
         """Jumps to position defined by flag A"""
@@ -115,17 +125,20 @@ class Simulator:
     def mark_position(self):
         """mark current position in maze"""
         self.marked_positions = np.vstack([self.marked_positions, [self.cur_i, self.cur_j]])
-        self.update_move_counter()
+        self.update_flags()
 
     def unmark_position(self):
         """unmark current position in maze"""
-        self.maze[self.cur_i][self.cur_j] = 0
-        self.update_move_counter()
+        idx = np.where((self.marked_positions[:, 0] == self.cur_i) &
+                       (self.marked_positions[:, 1] == self.cur_j))[0]
+        if len(idx) > 0:
+            self.marked_positions = np.delete(self.marked_positions, (idx[0]), axis=0)
+            self.update_flags()
 
     def dist_to_goal(self):
         """return Euclidean distance from current position to goal"""
         cur_position = (self.cur_i, self.cur_j)
-        goal_position = (self.dim_i, self.dim_j)
+        goal_position = (self.end_i, self.end_j)
         return sqrt(sum([(x - y) ** 2 for x, y in zip(cur_position, goal_position)]))
 
     # TODO: add more commands
@@ -138,7 +151,7 @@ class Simulator:
         """returns true of false"""
         return random.randint(0, 1)
 
-    def update_move_counter(self):
+    def update_flags(self):
         forward_coordinates = self.move(self.cur_dir)
         backward_coordinates = self.move(Direction.get_opposite(self.cur_dir))
         self.can_move_forward = self.check_can_move_to_coordinates(forward_coordinates)
@@ -148,11 +161,14 @@ class Simulator:
         self.marked_backward = self.get_marked_flag(backward_coordinates[0],
                                                     backward_coordinates[1])
         self.prev_dist_to_goal = self.dist_to_goal()
+
+    def update_move_counter(self):
+        self.update_flags()
         self.move_counter += 1
 
     def get_marked_flag(self, x, y):
         try:
-            return self.maze[x][y] == -1
+            return [x, y] in self.marked_positions.tolist()
         except IndexError:
             return False
 
@@ -223,13 +239,9 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
         if graphics:
             plt.clf()
             plt.imshow(sim.maze, cmap=plt.cm.binary, interpolation='nearest')
-            try:
-                x = sim.marked_positions[:, 1]
-                y = sim.marked_positions[:, 0]
-            except IndexError:
-                print("tukej")
-                x = sim.marked_positions[1]
-                y = sim.marked_positions[0]
+            # FIXME: plot marked positions
+            x = sim.marked_positions[:, 1]
+            y = sim.marked_positions[:, 0]
             plt.plot(x, y, 'cs', markersize=8.0, markerfacecolor="c")
             plt.plot(sim.cur_j, sim.cur_i, markers[sim.cur_dir], markersize=8.0,
                      markerfacecolor="g")

@@ -23,7 +23,9 @@ class Agent:
         "mark_position()",
         "unmark_position()",
         "go_to_flag_a()",
-        "go_to_flag_b()"
+        "go_to_flag_b()",
+        "turn_up()",
+        "turn_down()"
     ]
     TESTS = [
         "getting_closer()",

@@ -34,23 +34,27 @@ class Population:
             new_agents.append(self.mutate(child))
         self.agents = new_agents
 
+    # def cross_agents(self, parent_a, parent_b):
+    #     child = Agent([0 for _ in range(self.agent_size)])
+    #     start_pos = randint(0, self.agent_size - 1)
+    #     end_pos = randint(0, self.agent_size - 1)
+    #     for i in range(0, self.agent_size):
+    #         if start_pos < end_pos and start_pos < i < end_pos:
+    #             child.vector[i] = parent_a.vector[i]
+    #         elif start_pos > end_pos:
+    #             if not (start_pos > i > end_pos):
+    #                 child.vector[i] = parent_a.vector[i]
+    #     for i in range(0, self.agent_size):
+    #         if not parent_b.vector[i] in child.vector:
+    #             for ii in range(0, len(child.vector)):
+    #                 if child.vector[ii] == 0:
+    #                     child.vector[ii] = parent_b.vector[i]
+    #                     break
+    #     return child
+
     def cross_agents(self, parent_a, parent_b):
-        child = Agent([0 for _ in range(self.agent_size)])
-        start_pos = randint(0, self.agent_size - 1)
-        end_pos = randint(0, self.agent_size - 1)
-        for i in range(0, self.agent_size):
-            if start_pos < end_pos and start_pos < i < end_pos:
-                child.vector[i] = parent_a.vector[i]
-            elif start_pos > end_pos:
-                if not (start_pos > i > end_pos):
-                    child.vector[i] = parent_a.vector[i]
-        for i in range(0, self.agent_size):
-            if not parent_b.vector[i] in child.vector:
-                for ii in range(0, len(child.vector)):
-                    if child.vector[ii] == 0:
-                        child.vector[ii] = parent_b.vector[i]
-                        break
-        return child
+        parents = [parent_a, parent_b]
+        return Agent([parents[randint(0, 1)].vector[i] for i in range(self.agent_size)])
 
     @staticmethod
     def return_best(candidates):
