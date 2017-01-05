@@ -54,7 +54,7 @@ class Population:
 
     @staticmethod
     def return_best(candidates):
-        return sorted(candidates, key=lambda x: x.fitness, reverse=True)[0]
+        return sorted(candidates, key=lambda x: x.fitness, reverse=False)[0]
 
     def mutate(self, agent):
         if self.mutation == Mutation.RANDOM:
