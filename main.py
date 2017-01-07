@@ -9,7 +9,7 @@ agent_size = 25
 number_of_generations = 40
 elite_size = 5
 
-#FOR STATS
+# FOR STATS
 best_fitness = []
 worst_fitness = []
 avg_fitness = []
@@ -42,23 +42,23 @@ def solve_with_best():
     agent = read_best_agent()
     agent.solve_mazes()
 
+
 def write_stats_to_file(file_path):
     f = open(file_path, 'w+')
-    f.write("POP. SIZE\n"+str(population_size)+"\n")
-    f.write("AGENT.SIZE\n"+str(agent_size)+"\n")
-    f.write("GENERATIONS\n"+str(number_of_generations)+"\n")
-    f.write("ELITE SIZE\n"+str(elite_size)+"\n")
+    f.write("POP. SIZE\n" + str(population_size) + "\n")
+    f.write("AGENT.SIZE\n" + str(agent_size) + "\n")
+    f.write("GENERATIONS\n" + str(number_of_generations) + "\n")
+    f.write("ELITE SIZE\n" + str(elite_size) + "\n")
     f.write("BEST FITNESS\n")
     for b in best_fitness:
-        f.write(str(b)+"\n")
+        f.write(str(b) + "\n")
     f.write("WORST FITNESS\n")
     for w in worst_fitness:
-        f.write(str(w)+"\n")
+        f.write(str(w) + "\n")
     f.write("AVERAGE FITNESS\n")
     for a in avg_fitness:
-        f.write(str(a)+"\n")
+        f.write(str(a) + "\n")
     f.close()
-
 
 
 if __name__ == "__main__":
@@ -91,8 +91,9 @@ if __name__ == "__main__":
         population_avg = sum(fitness) / len(fitness)
         for f in fitness:
             print("Agent fitness: " + str(f))
-        population_best = sorted(fitness, reverse=False)[0]
-        population_worst = sorted(fitness, reverse=True)[0]
+        agents_sorted = sorted(fitness)
+        population_best = agents_sorted[0]
+        population_worst = agents_sorted[len(agents_sorted) - 1]
         print("Best population fitness: " + str(population_best))
         print("Worst population fitness: " + str(population_worst))
         print("Average population fitness: " + str(population_avg))

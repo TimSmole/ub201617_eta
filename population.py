@@ -24,11 +24,7 @@ class Population:
         self.agents = [Agent.generate_random(self.agent_size) for _ in range(self.population_size)]
 
     def evolve(self, debug=False):
-        new_agents = []
-        for _ in range(self.elite_size):
-            best = self.return_best(self.agents)
-            new_agents.append(best)
-            self.agents.remove(best)
+        new_agents = self.get_sorted_agents(self.agents)[:self.elite_size]
         for _ in range(self.elite_size, self.population_size):
             parent1 = self.tournament_selection()
             parent2 = self.tournament_selection()
@@ -58,10 +54,6 @@ class Population:
         parents = [parent_a, parent_b]
         return Agent([parents[randint(0, 1)].vector[i] for i in range(self.agent_size)])
 
-    @staticmethod
-    def return_best(candidates):
-        return sorted(candidates, key=lambda x: x.fitness, reverse=False)[0]
-
     def mutate(self, agent):
         if self.mutation == Mutation.RANDOM:
             max_command = len(agent.get_parser())
@@ -86,3 +78,11 @@ class Population:
             tournament.append(self.agents[random_id])
         fittest = self.return_best(tournament)
         return fittest
+
+    @staticmethod
+    def return_best(candidates):
+        return Population.get_sorted_agents(candidates)[0]
+
+    @staticmethod
+    def get_sorted_agents(candidates):
+        return sorted(candidates, key=lambda x: x.fitness)
