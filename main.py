@@ -69,6 +69,7 @@ if __name__ == "__main__":
     print("".join((padding, (" FINISHED " + str(i) + " "), padding)))
     print("Execution time: " + str(time.time() - start))
 
+    [a.compute_fitness() for a in population.agents]
     best = population.return_best(population.agents)
     print("==== BEST AGENT ====")
 
