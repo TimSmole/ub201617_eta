@@ -30,7 +30,7 @@ class Simulator:
         self.max_dist_to_goal = sqrt(self.dim_i ** 2 + self.dim_j ** 2)
 
         # starting position (entrance of the labyrinth)
-        self.move_counter = self.no_progress = 0
+        self.move_counter = self.no_progress = self.no_progress_overall = 0
         self.cur_dir = Direction.DOWN
         self.cur_i = self.last_i = self.start_i
         self.cur_j = self.last_j = self.start_j
@@ -39,6 +39,9 @@ class Simulator:
         self.flag_a = self.flag_b = None
         self.marked_current = self.marked_backward = self.marked_forward = False
         self.prev_dist_to_goal = self.dist_to_goal()
+
+        self.visited_positions = set()
+        self.visited_positions.add((self.start_i, self.start_j))
 
         self.marked_positions = np.array([[self.start_i, self.start_j]])
 
@@ -125,7 +128,6 @@ class Simulator:
 
     def nop(self):
         pass
-        # FIXME: update_move_counter ??
 
     def mark_position(self):
         """mark current position in maze"""
@@ -170,12 +172,17 @@ class Simulator:
     def update_no_progress(self):
         if self.cur_i == self.last_i and self.cur_j == self.last_j:
             self.no_progress += 1
+            self.no_progress_overall += 1
             self.last_i = self.cur_i
             self.last_j = self.cur_j
         else:
             self.no_progress = 0
 
+    def update_visited_positions(self):
+        self.visited_positions.add((self.cur_i, self.cur_j))
+
     def update_move_counter(self):
+        self.update_visited_positions()
         self.update_no_progress()
         self.update_flags()
         self.move_counter += 1
@@ -206,8 +213,12 @@ class Simulator:
         """Check if there was no progress for a while"""
         return self.no_progress > 2
 
+    def check_visited_position(self):
+        """Check if current position was already visited"""
+        return (self.cur_i, self.cur_j) in self.visited_positions
+
     def fitness(self):
-        return self.dist_to_goal() + 0.001 * self.move_counter
+        return self.dist_to_goal() + 0.001 * self.move_counter + 0.1 * self.no_progress_overall
 
 
 class FoundGoalException(Exception):
