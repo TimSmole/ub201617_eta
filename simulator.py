@@ -27,6 +27,7 @@ class Simulator:
         # i: rows, j: columns
         self.start_i, self.start_j, self.end_i, self.end_j, self.maze = input_maze
         self.dim_i, self.dim_j = self.maze.shape
+        self.max_dist_to_goal = sqrt(self.dim_i ** 2 + self.dim_j ** 2)
 
         # starting position (entrance of the labyrinth)
         self.move_counter = self.no_progress = 0
@@ -63,6 +64,10 @@ class Simulator:
             self.cur_i, self.cur_j = self.move(Direction.get_opposite(self.cur_dir))
         self.update_move_counter()
         self.check_end()
+
+    def turn_random(self):
+        self.cur_dir = self.rand.choice(list(Direction))
+        self.update_flags()
 
     def turn_left(self):
         """change direction of agent"""
@@ -149,7 +154,7 @@ class Simulator:
 
     def random_choice(self):
         """returns true of false"""
-        return random.randint(0, 1)
+        return self.rand.randint(0, 1)
 
     def update_flags(self):
         forward_coordinates = self.move(self.cur_dir)

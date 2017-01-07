@@ -1,3 +1,5 @@
+from math import sqrt
+
 from numpy import random
 from random import randint
 
@@ -10,6 +12,18 @@ from multiprocessing import Process, Queue, current_process
 from simulator import simulate
 
 
+def worker(work_queue, done_queue):
+    try:
+        for job in iter(work_queue.get, 'STOP'):
+            result = simulate(job["maze"], job["self"], job["verbose"], job["graphics"],
+                              job["max_iter"])
+            done_queue.put(("%s - ID: %s, " % (current_process().name, job["id"]), True, result))
+    except Exception, e:
+        done_queue.put(("%s - ID: %s failed with: %s" %
+                        (current_process().name, job["id"], e.message), False, 0))
+    return True
+
+
 class Agent:
     # legal commands and tests
     # students can (and should) add additional moves and tests
@@ -19,6 +33,9 @@ class Agent:
         "move_backward()",
         "turn_left()",
         "turn_right()",
+        "turn_up()",
+        "turn_down()",
+        "turn_random()",
         "set_flag_a()",
         "clear_flag_a()",
         "set_flag_b()",
@@ -26,9 +43,7 @@ class Agent:
         "mark_position()",
         "unmark_position()",
         "go_to_flag_a()",
-        "go_to_flag_b()",
-        "turn_up()",
-        "turn_down()"
+        "go_to_flag_b()"
     ]
     TESTS = [
         "getting_closer()",
@@ -46,6 +61,7 @@ class Agent:
 
     def __init__(self, vector):
         self.vector = vector
+        self.executable = None
         self.fitness = None
 
     def to_vector(self):
@@ -55,7 +71,13 @@ class Agent:
         return Agent.vector_to_program(self.vector)
 
     def to_executable(self):
-        return Agent.program_to_executable(Agent.vector_to_program(self.vector))
+        if self.executable is None:
+            self.executable = Agent.program_to_executable(Agent.vector_to_program(self.vector))
+        return self.executable
+
+    def compute_similarity(self, agents):
+        """Similarity is represented as number of commands that are this agent and another."""
+        return sum([cmd in a.vector for cmd in self.vector for a in agents]) / len(agents)
 
     def compute_fitness(self, graphics=False):
         """Simulate and visualize some mazes.
@@ -68,26 +90,17 @@ class Agent:
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness
 
-    @staticmethod
-    def worker(work_queue, done_queue):
-        try:
-            for job in iter(work_queue.get, 'STOP'):
-                result = simulate(job["maze"], job["self"], job["verbose"], job["graphics"], job["max_iter"])
-                done_queue.put(("%s - ID: %s, " % (current_process().name, job["id"]), True, result))
-        except Exception, e:
-            done_queue.put(("%s - ID: %s failed with: %s" % (current_process().name, job["id"], e.message), False, 0))
-        return True
-
     def async_compute_fitness(self, graphics=False, workers=4):
         work_queue = Queue()
         done_queue = Queue()
         processes = []
 
-        [work_queue.put(dict(id=i, maze=m, self=self, verbose=False, graphics=graphics, max_iter=100))
-            for i, m in enumerate(mazes.mazes_train)]
+        [work_queue.put(
+            dict(id=i, maze=m, self=self, verbose=False, graphics=graphics, max_iter=100))
+         for i, m in enumerate(mazes.mazes_train)]
 
         for w in xrange(workers):
-            p = Process(target=self.worker, args=(work_queue, done_queue))
+            p = Process(target=worker, args=(work_queue, done_queue))
             p.start()
             processes.append(p)
             work_queue.put('STOP')
@@ -184,4 +197,8 @@ class Agent:
         try:
             return [Agent.get_parser()[i] for i in v]
         except:
+            print("VECTOR: ")
+            print(v)
+            print("i: ")
+            print(i)
             raise Exception("Illegal vector")

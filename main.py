@@ -2,10 +2,10 @@ import os
 import time
 
 from agent import Agent
-from population import Population
+from population import Population, Ranking
 
-population_size = 25
-agent_size = 30
+population_size = 10
+agent_size = 10
 number_of_generations = 10
 elite_size = 5
 
@@ -17,8 +17,8 @@ avg_fitness = []
 
 def save_agent(agent):
     filename = './out/agent_' + str(population_size) + '_' + \
-               str(agent_size) + '-' + str(number_of_generations) + '-' + \
-               str(elite_size) + '-' + str(agent.fitness) + '.txt'
+               str(agent_size) + '_' + str(number_of_generations) + '_' + \
+               str(elite_size) + '_' + str(agent.fitness) + '.txt'
     f = open(filename, 'w+')
     f.write("".join(agent.to_program()))
     f.flush()
@@ -63,9 +63,8 @@ def write_stats_to_file(file_path):
 
 if __name__ == "__main__":
     start = time.time()
-
     population = Population(population_size=population_size, agent_size=agent_size,
-                            elite_size=elite_size)
+                            elite_size=elite_size, ranking=Ranking.FITNESS)
     population.generate_agents()
 
     padding = "=" * 26
@@ -84,16 +83,16 @@ if __name__ == "__main__":
         best_fitness.append(population_best)
         worst_fitness.append(population_worst)
         avg_fitness.append(population_avg)
+
         population.evolve(debug=False)
 
     print("".join((padding, (" FINISHED " + str(i) + " "), padding)))
     print("Execution time: " + str(time.time() - start))
 
     [a.async_compute_fitness() for a in population.agents]
-    best = population.return_best(population.agents)
+    best = population.return_fittest(population.agents)
     print("==== BEST AGENT ====")
 
-    file_path = './out/best_agent.txt'
     stats_path = './out/run_stats.txt'
     write_stats_to_file(stats_path)
     save_agent(best)
