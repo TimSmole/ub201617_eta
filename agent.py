@@ -6,7 +6,7 @@ import numpy as np
 import itertools
 
 import mazes
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, current_process
 from simulator import simulate
 
 
@@ -68,25 +68,38 @@ class Agent:
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness
 
-    def f(self, q, graphics):
-        for m in mazes.mazes_train:
-            q.put(simulate(m, self, verbose=False, graphics=graphics, max_iter=200))
+    @staticmethod
+    def worker(work_queue, done_queue):
+        try:
+            for job in iter(work_queue.get, 'STOP'):
+                result = simulate(job["maze"], job["self"], job["verbose"], job["graphics"], job["max_iter"])
+                done_queue.put(("%s - ID: %s, " % (current_process().name, job["id"]), True, result))
+        except Exception, e:
+            done_queue.put(("%s - ID: %s failed with: %s" % (current_process().name, job["id"], e.message), False, 0))
+        return True
 
-    def async_compute_fitness(self, graphics=False):
-        """Simulate and visualize some mazes.
-         The function simulate can operate on files, programs or vectors.
-         If you have problems with visualization (i.e. are a Mac user),
-         try running the script from the terminal instead of PyCharm."""
+    def async_compute_fitness(self, graphics=False, workers=4):
+        work_queue = Queue()
+        done_queue = Queue()
+        processes = []
 
-        # Populate queue to compute all simulations
-        q = Queue()
-        p = Process(target=self.f, args=(q, graphics,))
-        p.start()
-        p.join()
+        [work_queue.put(dict(id=i, maze=m, self=self, verbose=False, graphics=graphics, max_iter=100))
+            for i, m in enumerate(mazes.mazes_train)]
+
+        for w in xrange(workers):
+            p = Process(target=self.worker, args=(work_queue, done_queue))
+            p.start()
+            processes.append(p)
+            work_queue.put('STOP')
+
+        for p in processes:
+            p.join()
+
+        done_queue.put('STOP')
 
         af = 0
-        while not q.empty():
-            af += q.get()
+        for result in iter(done_queue.get, 'STOP'):
+            af += result[2]
 
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness

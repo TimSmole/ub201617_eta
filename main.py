@@ -68,22 +68,6 @@ if __name__ == "__main__":
                             elite_size=elite_size)
     population.generate_agents()
 
-    # FIXME: ==========REMOVE ==========
-    # a = population.agents[0]
-    # print("".join(a.to_program()))
-    #
-    # import pylab as plt
-    # import mazes
-    # from simulator import simulate
-    #
-    # plt.ion()
-    # plt.clf()
-    # plt.imshow(mazes.mazes_train[0][4], cmap=plt.cm.binary, interpolation='nearest')
-    # plt.pause(0.01)
-    #
-    # simulate(mazes.mazes_train[0], a, verbose=False, graphics=True, delay=0.1, max_iter=10)
-    # exit()
-
     padding = "=" * 26
     for i in range(number_of_generations):
         print "".join((padding, (" GENERATION " + str(i) + " "), padding))
