@@ -88,7 +88,7 @@ class Population:
     def tournament_selection(self):
         tournament = []
         for i in range(0, self.tournament_size):
-            random_id = randint(0, self.population_size - 1)
+            random_id = randint(0, self.agents - 1)
             tournament.append(self.agents[random_id])
         fittest = self.return_best(tournament)
         return fittest
