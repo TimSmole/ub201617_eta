@@ -1,23 +1,46 @@
+import os
 import time
 
+from agent import Agent
 from population import Population
 
-start = time.time()
 population_size = 200
-agent_size = 20
-number_of_generations = 10
+agent_size = 25
+number_of_generations = 40
 elite_size = 5
-padding = "=" * 26
 
 
-def write_to_file(file_path, best):
-    f = open(file_path, 'w+')
-    f.write("".join(best.to_program()))
+def save_agent(agent):
+    filename = './out/agent_' + str(population_size) + '_' + \
+               str(agent_size) + '-' + str(number_of_generations) + '-' + \
+               str(elite_size) + '-' + str(agent.fitness) + '.txt'
+    f = open(filename, 'w+')
+    f.write("".join(agent.to_program()))
     f.flush()
-    print("".join(best.to_program()))
+    print("".join(agent.to_program()))
+
+
+def read_agent(filename):
+    return Agent.generate_from_file_or_string("./out/" + filename)
+
+
+def read_best_agent():
+    fitness = []
+    for f in os.listdir("./out/"):
+        if os.path.isfile(os.path.join("./out/", f)) and 'agent_' in f:
+            fitness.append(float(f.split("_")[-1].split(".txt")[0]))
+    best_fitness = sorted(fitness)[0]
+    return read_agent([f for f in os.listdir("./out/") if str(best_fitness) in f][0])
+
+
+def solve_with_best():
+    agent = read_best_agent()
+    agent.solve_mazes()
 
 
 if __name__ == "__main__":
+    start = time.time()
+
     population = Population(population_size=population_size, agent_size=agent_size,
                             elite_size=elite_size)
     population.generate_agents()
@@ -38,26 +61,16 @@ if __name__ == "__main__":
     # simulate(mazes.mazes_train[0], a, verbose=False, graphics=True, delay=0.1, max_iter=10)
     # exit()
 
+    padding = "=" * 26
     for i in range(number_of_generations):
-
-        delimiter = "".join((padding, (" GENERATION " + str(i) + " "), padding))
-        print delimiter
-
-        fitness = [a.compute_fitness() for a in population.agents]
-        population_fitness = sum(fitness) / len(fitness)
-        for f in fitness:
-            print("Agent fitness: " + str(f))
-        print("Population fitness: " + str(population_fitness))
-
+        print "".join((padding, (" GENERATION " + str(i) + " "), padding))
         population.evolve()
-    delimiter = "".join((padding, (" FINISHED " + str(i) + " "), padding))
 
-    print(delimiter)
+    print("".join((padding, (" FINISHED " + str(i) + " "), padding)))
     print("Execution time: " + str(time.time() - start))
 
     best = population.return_best(population.agents)
     print("==== BEST AGENT ====")
 
-    file_path = './out/best_agent.txt'
-    write_to_file(file_path, best)
+    save_agent(best)
     best.solve_mazes()
