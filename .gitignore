@@ -31,7 +31,8 @@
 ## Plugin-specific files:
 
 # IntelliJ
-/out/
+/out/*
+/out/run_stats.txt
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
