@@ -23,7 +23,7 @@ class Population:
     def generate_agents(self):
         self.agents = [Agent.generate_random(self.agent_size) for _ in range(self.population_size)]
 
-    def evolve(self):
+    def evolve(self, debug=False):
         new_agents = []
         for _ in range(self.elite_size):
             new_agents.append(self.return_best(self.agents))
