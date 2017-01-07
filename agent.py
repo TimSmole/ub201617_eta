@@ -1,3 +1,4 @@
+from numpy import random
 from random import randint
 
 import os
@@ -69,8 +70,9 @@ class Agent:
 
     @staticmethod
     def generate_random(agent_size):
-        vector = [randint(0, len(Agent.get_parser()) - 1) for _ in range(agent_size)]
-        return Agent(vector)
+        cmds = [i for i in range(len(Agent.get_parser()))]
+        random.shuffle(cmds)
+        return Agent(cmds[0:agent_size])
 
     @staticmethod
     def generate_from_file_or_string(program):

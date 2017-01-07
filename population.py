@@ -26,7 +26,9 @@ class Population:
     def evolve(self, debug=False):
         new_agents = []
         for _ in range(self.elite_size):
-            new_agents.append(self.return_best(self.agents))
+            best = self.return_best(self.agents)
+            new_agents.append(best)
+            self.agents.remove(best)
         for _ in range(self.elite_size, self.population_size):
             parent1 = self.tournament_selection()
             parent2 = self.tournament_selection()
@@ -80,7 +82,7 @@ class Population:
     def tournament_selection(self):
         tournament = []
         for i in range(0, self.tournament_size):
-            random_id = randint(0, self.population_size - 1)
+            random_id = randint(0, len(self.agents) - 1)
             tournament.append(self.agents[random_id])
         fittest = self.return_best(tournament)
         return fittest
