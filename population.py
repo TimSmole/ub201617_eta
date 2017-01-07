@@ -24,9 +24,17 @@ class Population:
         self.agents = [Agent.generate_random(self.agent_size) for _ in range(self.population_size)]
 
     def evolve(self):
+        fitness = [a.compute_fitness() for a in self.agents]
+        population_fitness = sum(fitness) / len(fitness)
+        for f in fitness:
+            print("Agent fitness: " + str(f))
+        print("Population fitness: " + str(population_fitness))
+
         new_agents = []
         for _ in range(self.elite_size):
-            new_agents.append(self.return_best(self.agents))
+            best = self.return_best(self.agents)
+            new_agents.append(best)
+            self.agents.remove(best)
         for _ in range(self.elite_size, self.population_size):
             parent1 = self.tournament_selection()
             parent2 = self.tournament_selection()
