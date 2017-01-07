@@ -1,7 +1,4 @@
-from math import sqrt
-
 from numpy import random
-from random import randint
 
 import os
 import numpy as np
