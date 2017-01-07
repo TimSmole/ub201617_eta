@@ -6,9 +6,9 @@ from dateutil.parser import parse
 from agent import Agent
 from population import Population, Ranking
 
-population_size = 25
+population_size = 50
 agent_size = 30
-number_of_generations = 10
+number_of_generations = 15
 elite_size = 5
 
 execution_break = "2017-01-07T21:01:00"

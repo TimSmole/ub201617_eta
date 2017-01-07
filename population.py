@@ -40,7 +40,7 @@ class Population:
 
     def cross_agents(self, parent_a, parent_b):
         parents = [parent_a, parent_b]
-        return Agent([parents[randint(0, 1)].vector[i] for i in range(self.agent_size)])
+        return Agent([parents[randint(0, 1)].vector[randint(0, self.agent_size - 1)] for i in range(self.agent_size)])
 
     @staticmethod
     def return_fittest(candidates):

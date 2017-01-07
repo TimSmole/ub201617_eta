@@ -171,12 +171,12 @@ class Simulator:
 
     def update_no_progress(self):
         if self.cur_i == self.last_i and self.cur_j == self.last_j:
-            self.no_progress += 1
-            self.no_progress_overall += 1
+            self.no_progress += 2
+            self.no_progress_overall += 2
             self.last_i = self.cur_i
             self.last_j = self.cur_j
         else:
-            self.no_progress = 0
+            self.no_progress -= 0.5
 
     def update_visited_positions(self):
         self.visited_positions.add((self.cur_i, self.cur_j))
@@ -211,14 +211,14 @@ class Simulator:
 
     def check_no_progress(self):
         """Check if there was no progress for a while"""
-        return self.no_progress > 2
+        return self.no_progress > 4
 
     def check_visited_position(self):
         """Check if current position was already visited"""
         return (self.cur_i, self.cur_j) in self.visited_positions
 
     def fitness(self):
-        return self.dist_to_goal() + 0.001 * self.move_counter + 0.1 * self.no_progress_overall
+        return self.dist_to_goal() + 0.001 * self.move_counter + 0.001 * self.no_progress_overall
 
 
 class FoundGoalException(Exception):
