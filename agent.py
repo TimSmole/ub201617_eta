@@ -39,7 +39,8 @@ class Agent:
         "marked_backward",
         "flag_a",
         "flag_b",
-        "random_choice()"
+        "random_choice()",
+        "check_no_progress()"
     ]
     parser = None
 
@@ -63,13 +64,13 @@ class Agent:
          try running the script from the terminal instead of PyCharm."""
         af = 0
         for m in mazes.mazes_train:
-            af += simulate(m, self, verbose=False, graphics=graphics, max_iter=100)
+            af += simulate(m, self, verbose=False, graphics=graphics, max_iter=200)
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness
 
     def f(self, q, graphics):
         for m in mazes.mazes_train:
-            q.put(simulate(m, self, verbose=False, graphics=graphics, max_iter=100))
+            q.put(simulate(m, self, verbose=False, graphics=graphics, max_iter=200))
 
     def async_compute_fitness(self, graphics=False):
         """Simulate and visualize some mazes.

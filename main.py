@@ -4,9 +4,9 @@ import time
 from agent import Agent
 from population import Population
 
-population_size = 20
-agent_size = 25
-number_of_generations = 40
+population_size = 25
+agent_size = 30
+number_of_generations = 10
 elite_size = 5
 
 # FOR STATS

@@ -29,10 +29,10 @@ class Simulator:
         self.dim_i, self.dim_j = self.maze.shape
 
         # starting position (entrance of the labyrinth)
-        self.move_counter = 0
+        self.move_counter = self.no_progress = 0
         self.cur_dir = Direction.DOWN
-        self.cur_i = self.start_i
-        self.cur_j = self.start_j
+        self.cur_i = self.last_i = self.start_i
+        self.cur_j = self.last_j = self.start_j
         self.can_move_forward = True
         self.can_move_backward = False
         self.flag_a = self.flag_b = None
@@ -162,7 +162,16 @@ class Simulator:
                                                     backward_coordinates[1])
         self.prev_dist_to_goal = self.dist_to_goal()
 
+    def update_no_progress(self):
+        if self.cur_i == self.last_i and self.cur_j == self.last_j:
+            self.no_progress += 1
+            self.last_i = self.cur_i
+            self.last_j = self.cur_j
+        else:
+            self.no_progress = 0
+
     def update_move_counter(self):
+        self.update_no_progress()
         self.update_flags()
         self.move_counter += 1
 
@@ -187,6 +196,10 @@ class Simulator:
     def check_can_move_to_coordinates(self, coordinates):
         """Check if agent can move to given coordinates"""
         return self.check_bounds(coordinates) and self.check_wall(coordinates)
+
+    def check_no_progress(self):
+        """Check if there was no progress for a while"""
+        return self.no_progress > 2
 
     def fitness(self):
         return self.dist_to_goal() + 0.001 * self.move_counter
