@@ -246,9 +246,9 @@ def simulate(input_maze, agent, graphics=False, verbose=False, max_iter=100, max
             plt.plot(sim.cur_j, sim.cur_i, markers[sim.cur_dir], markersize=8.0,
                      markerfacecolor="g")
             if sim.flag_a:
-                plt.plot(0, -1.2, 'go', markersize=8.0, markerfacecolor="g")
+                plt.plot(sim.flag_a[1], sim.flag_a[0], 'go', markersize=8.0, markerfacecolor="g")
             if sim.flag_b:
-                plt.plot(1, -1.2, 'bo', markersize=8.0, markerfacecolor="b")
+                plt.plot(sim.flag_b[1], sim.flag_b[0], 'bo', markersize=8.0, markerfacecolor="b")
             plt.pause(0.0001)
             time.sleep(delay)
     if verbose:
