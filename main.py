@@ -4,8 +4,8 @@ import time
 from agent import Agent
 from population import Population, Ranking
 
-population_size = 10
-agent_size = 10
+population_size = 25
+agent_size = 30
 number_of_generations = 10
 elite_size = 5
 

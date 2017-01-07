@@ -55,7 +55,8 @@ class Agent:
         "flag_a",
         "flag_b",
         "random_choice()",
-        "check_no_progress()"
+        "check_no_progress()",
+        "check_visited_position()"
     ]
     parser = None
 
