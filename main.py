@@ -1,6 +1,8 @@
 import os
 import time
 
+from datetime import datetime
+from dateutil.parser import parse
 from agent import Agent
 from population import Population, Ranking
 
@@ -8,6 +10,8 @@ population_size = 25
 agent_size = 30
 number_of_generations = 10
 elite_size = 5
+
+execution_break = "2017-01-07T21:01:00"
 
 # FOR STATS
 best_fitness = []
@@ -61,16 +65,29 @@ def write_stats_to_file(file_path):
     f.close()
 
 
+def prepare_execution_break(date_time_string):
+    try:
+        dt = parse(date_time_string)
+        return True, dt
+    except ValueError:
+        return False, None
+
+
 if __name__ == "__main__":
     start = time.time()
     population = Population(population_size=population_size, agent_size=agent_size,
                             elite_size=elite_size, ranking=Ranking.FITNESS)
     population.generate_agents()
 
+    do_break_on_time, break_date_time = prepare_execution_break(execution_break)
     padding = "=" * 26
-    for i in range(number_of_generations):
+    i = 0
+    while i < number_of_generations \
+            and (not do_break_on_time or (do_break_on_time and datetime.now() < break_date_time)):
         print "".join((padding, (" GENERATION " + str(i) + " "), padding))
+        fit_start = time.time()
         fitness = [a.async_compute_fitness() for a in population.agents]
+        print("async_compute_fitness time: " + str(time.time() - fit_start))
         population_avg = sum(fitness) / len(fitness)
         for f in fitness:
             print("Agent fitness: " + str(f))
@@ -85,6 +102,7 @@ if __name__ == "__main__":
         avg_fitness.append(population_avg)
 
         population.evolve(debug=False)
+        i += 1
 
     print("".join((padding, (" FINISHED " + str(i) + " "), padding)))
     print("Execution time: " + str(time.time() - start))
