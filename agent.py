@@ -4,7 +4,9 @@ from random import randint
 import os
 import numpy as np
 import itertools
+
 import mazes
+from multiprocessing import Process, Queue
 from simulator import simulate
 
 
@@ -62,6 +64,29 @@ class Agent:
         af = 0
         for m in mazes.mazes_train:
             af += simulate(m, self, verbose=False, graphics=graphics, max_iter=100)
+        self.fitness = af / len(mazes.mazes_train)
+        return self.fitness
+
+    def f(self, q, graphics):
+        for m in mazes.mazes_train:
+            q.put(simulate(m, self, verbose=False, graphics=graphics, max_iter=100))
+
+    def async_compute_fitness(self, graphics=False):
+        """Simulate and visualize some mazes.
+         The function simulate can operate on files, programs or vectors.
+         If you have problems with visualization (i.e. are a Mac user),
+         try running the script from the terminal instead of PyCharm."""
+
+        # Populate queue to compute all simulations
+        q = Queue()
+        p = Process(target=self.f, args=(q, graphics,))
+        p.start()
+        p.join()
+
+        af = 0
+        while not q.empty():
+            af += q.get()
+
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness
 

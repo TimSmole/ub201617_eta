@@ -87,7 +87,7 @@ if __name__ == "__main__":
     padding = "=" * 26
     for i in range(number_of_generations):
         print "".join((padding, (" GENERATION " + str(i) + " "), padding))
-        fitness = [a.compute_fitness() for a in population.agents]
+        fitness = [a.async_compute_fitness() for a in population.agents]
         population_avg = sum(fitness) / len(fitness)
         for f in fitness:
             print("Agent fitness: " + str(f))
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     print("".join((padding, (" FINISHED " + str(i) + " "), padding)))
     print("Execution time: " + str(time.time() - start))
 
-    [a.compute_fitness() for a in population.agents]
+    [a.async_compute_fitness() for a in population.agents]
     best = population.return_best(population.agents)
     print("==== BEST AGENT ====")
 
