@@ -6,7 +6,6 @@ def parse_file(file_name):
     avg_fit=[]
     best_fit=[]
     worst_fit=[]
-    #TODO Parse file
     with open(file_name) as f:
         data = f.readlines()
     generations = int(data[2].replace("\n", "").split(" ")[1])
