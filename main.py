@@ -21,6 +21,10 @@ class MazeRunner(object):
     worst_fitness = []
     average_fitness = []
 
+    # File paths
+    stats_path_evol = './out/run_stats.txt'
+    stats_path_non_evol = './out/run_stats_non_evol.txt'
+
     def __init__(self, population_size, agent_size, 
                     number_of_generations, elite_size):
 
@@ -82,8 +86,11 @@ class MazeRunner(object):
         best = population.return_fittest(population.agents)
 
         print("==== BEST AGENT ====")
-        stats_path = './out/run_stats.txt'
-        self.write_stats_to_file(stats_path)
+        if evolve:
+            self.write_stats_to_file(self.stats_path)
+        else:
+            self.write_stats_to_file(self.stats_path_non_evol)
+
         self.save_agent(best)
         best.solve_mazes()
 
@@ -97,16 +104,19 @@ class MazeRunner(object):
         file.write("GENERATIONS: " + str(self.NUMBER_OF_GENERATIONS) + "\n")
         file.write("ELITE SIZE: " + str(self.ELITE_SIZE) + "\n")
 
+        file.write("\n")
         file.write("BEST FITNESS\n")
         file.write(self.DELIMITER)
         for b in self.best_fitness:
             file.write(str(b) + "\n")
 
+        file.write("\n")
         file.write("WORST FITNESS\n")
         file.write(self.DELIMITER)
         for w in self.worst_fitness:
             file.write(str(w) + "\n")
 
+        file.write("\n")
         file.write("AVERAGE FITNESS\n")
         file.write(self.DELIMITER)
         for a in self.average_fitness:
@@ -150,6 +160,16 @@ def solve_with_best():
     agent.solve_mazes()
 
 
+def compare_evolution(self, evol_path, non_evol_path):
+    
+    try:
+        evol_file = open(evol_path, 'r')
+        non_evol_file = open(non_evol_path, 'r')
+    except Exception as e:
+        return e
+
+
+
 if __name__ == "__main__":
     """ 
     SAMPLE PARAMETERS
@@ -183,6 +203,12 @@ if __name__ == "__main__":
                       args.gen_number,
                       args.elite_size)
 
-    evolve = True
-    maze.execute(evolve)
-    solve_with_best()
+    # Execute evolution algorithm
+    maze.execute(True)
+    #Execute non evolution algorithm
+    maze.execute(False)
+
+    # Compare both solutions
+    compare_evolution()
+
+    # solve_with_best()
