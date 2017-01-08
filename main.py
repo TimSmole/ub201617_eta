@@ -31,7 +31,7 @@ class MazeRunner(object):
 
         self.DELIMITER = "-" * 15 + "\n"
 
-    def execute(self):
+    def execute(self, evolve=True):
         start = time.time()
         population = Population(population_size=self.POPULATION_SIZE, 
                                 agent_size=self.AGENT_SIZE, 
@@ -68,7 +68,11 @@ class MazeRunner(object):
             self.worst_fitness.append(population_worst)
             self.average_fitness.append(population_avg)
 
-            population.evolve(debug=False)
+            if evolve:
+                population.evolve(debug=False)
+            else:
+                population.generate_agents()
+            
             i += 1
 
         print("".join((padding, (" FINISHED " + str(i) + " "), padding)))
@@ -179,5 +183,6 @@ if __name__ == "__main__":
                       args.gen_number,
                       args.elite_size)
 
-    maze.execute()
+    evolve = True
+    maze.execute(evolve)
     solve_with_best()
