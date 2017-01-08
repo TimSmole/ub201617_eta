@@ -6,10 +6,10 @@ from dateutil.parser import parse
 from agent import Agent
 from population import Population, Ranking
 
-population_size = 150
-agent_size = 25
-number_of_generations = 500
-elite_size = 15
+population_size = 50
+agent_size = 30
+number_of_generations = 1000
+elite_size = 5
 
 execution_break = "2017-01-08T10:00:00"
 
@@ -73,12 +73,11 @@ def prepare_execution_break(date_time_string):
         return False, None
 
 
-if __name__ == "__main__":
+def perform_maze_simulation():
     start = time.time()
     population = Population(population_size=population_size, agent_size=agent_size,
                             elite_size=elite_size, ranking=Ranking.FITNESS)
     population.generate_agents()
-
     do_break_on_time, break_date_time = prepare_execution_break(execution_break)
     padding = "=" * 26
     i = 0
@@ -103,15 +102,17 @@ if __name__ == "__main__":
 
         population.evolve(debug=False)
         i += 1
-
     print("".join((padding, (" FINISHED " + str(i) + " "), padding)))
     print("Execution time: " + str(time.time() - start))
-
     [a.async_compute_fitness() for a in population.agents]
     best = population.return_fittest(population.agents)
     print("==== BEST AGENT ====")
-
     stats_path = './out/run_stats.txt'
     write_stats_to_file(stats_path)
     save_agent(best)
     best.solve_mazes()
+
+
+if __name__ == "__main__":
+    #perform_maze_simulation()
+    solve_with_best()
