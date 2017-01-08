@@ -1,5 +1,6 @@
 import os
 import time
+import argparse
 
 from datetime import datetime
 from dateutil.parser import parse
@@ -7,7 +8,7 @@ from agent import Agent
 from population import Population, Ranking
 
 
-execution_break = "2017-01-08T14:00:00"
+execution_break = "2017-01-09T16:00:00"
 
 class MazeRunner(object):
     POPULATION_SIZE = 0
@@ -75,8 +76,8 @@ class MazeRunner(object):
 
         [a.async_compute_fitness() for a in population.agents]
         best = population.return_fittest(population.agents)
-        print("==== BEST AGENT ====")
 
+        print("==== BEST AGENT ====")
         stats_path = './out/run_stats.txt'
         self.write_stats_to_file(stats_path)
         self.save_agent(best)
@@ -155,6 +156,28 @@ if __name__ == "__main__":
     elite_size = 15
 
     """
-    print "Executing maze"
-    maze = MazeRunner(150, 25, 1, 15)
+    # Parsing arguments
+    parser = argparse.ArgumentParser(description='Maze parameters')
+    # Population size
+    parser.add_argument('-p', type=int, dest='population_size', 
+        default=150, help='Argument for population size.')
+    # Agent size
+    parser.add_argument('-a', type=int, dest='agent_size',
+        default=25, help='Argument for the agent size parameter.')
+    # Number of generations
+    parser.add_argument('-g', type=int, dest='gen_number',
+        default=500, help='Argument for number of generations')
+    # Elite size
+    parser.add_argument('-e', type=int, dest='elite_size',
+        default=15, help='Argument for elite size')
+
+    args = parser.parse_args()
+
+    # Create MazeRunner object
+    maze = MazeRunner(args.population_size, 
+                      args.agent_size,
+                      args.gen_number,
+                      args.elite_size)
+
     maze.execute()
+    solve_with_best()
