@@ -98,6 +98,7 @@ class MazeRunner(object):
         file.write("AGENT.SIZE: " + str(self.AGENT_SIZE) + "\n")
         file.write("GENERATIONS: " + str(self.NUMBER_OF_GENERATIONS) + "\n")
         file.write("ELITE SIZE: " + str(self.ELITE_SIZE) + "\n")
+        file.write("EVOLVE: " + str(evolve) + "\n")
         file.write(self.DELIMITER)
         file.write("BEST FITNESS\n")
         file.write(self.DELIMITER)
@@ -169,13 +170,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Maze parameters')
     # Population size
     parser.add_argument('-p', type=int, dest='population_size', 
-        default=20, help='Argument for population size.')
+        default=50, help='Argument for population size.')
     # Agent size
     parser.add_argument('-a', type=int, dest='agent_size',
-        default=25, help='Argument for the agent size parameter.')
+        default=30, help='Argument for the agent size parameter.')
     # Number of generations
     parser.add_argument('-g', type=int, dest='gen_number',
-        default=5, help='Argument for number of generations')
+        default=20, help='Argument for number of generations')
     # Elite size
     parser.add_argument('-e', type=int, dest='elite_size',
         default=5, help='Argument for elite size')
@@ -188,6 +189,6 @@ if __name__ == "__main__":
                       args.gen_number,
                       args.elite_size)
 
-    evolve = True
+    evolve = False
     maze.execute(evolve)
     solve_with_best()
