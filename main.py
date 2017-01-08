@@ -23,7 +23,7 @@ class MazeRunner(object):
 
     # File paths
     stats_path_evol = './out/run_stats.txt'
-    stats_path_non_evol = './out/run_stats_non_evol.txt'
+    stats_path_non_evol = './out/run_stats_non_evolv.txt'
 
     def __init__(self, population_size, agent_size, 
                     number_of_generations, elite_size):
@@ -86,11 +86,17 @@ class MazeRunner(object):
         best = population.return_fittest(population.agents)
 
         print("==== BEST AGENT ====")
-        if evolve:
-            self.write_stats_to_file(self.stats_path)
-        else:
-            self.write_stats_to_file(self.stats_path_non_evol)
 
+        if evolve:
+            base_path = self.stats_path_evol
+        else:
+            base_path = self.stats_path_non_evol
+
+        stats_path = base_path + str(self.POPULATION_SIZE) + '_' + \
+                   str(self.AGENT_SIZE) + '_' + str(self.NUMBER_OF_GENERATIONS) + '_' + \
+                   str(self.ELITE_SIZE) + '_' + str(time.time()) + '.txt'
+
+        self.write_stats_to_file(stats_path)
         self.save_agent(best)
         best.solve_mazes()
 
@@ -104,19 +110,19 @@ class MazeRunner(object):
         file.write("GENERATIONS: " + str(self.NUMBER_OF_GENERATIONS) + "\n")
         file.write("ELITE SIZE: " + str(self.ELITE_SIZE) + "\n")
 
-        file.write("\n")
+        file.write(self.DELIMITER)
         file.write("BEST FITNESS\n")
         file.write(self.DELIMITER)
         for b in self.best_fitness:
             file.write(str(b) + "\n")
 
-        file.write("\n")
+        file.write(self.DELIMITER)
         file.write("WORST FITNESS\n")
         file.write(self.DELIMITER)
         for w in self.worst_fitness:
             file.write(str(w) + "\n")
 
-        file.write("\n")
+        file.write(self.DELIMITER)
         file.write("AVERAGE FITNESS\n")
         file.write(self.DELIMITER)
         for a in self.average_fitness:
@@ -150,7 +156,10 @@ def read_best_agent():
     fitness = []
     for f in os.listdir("./out/"):
         if os.path.isfile(os.path.join("./out/", f)) and 'agent_' in f:
-            fitness.append(float(f.split("_")[-1].split(".txt")[0]))
+            try:
+                fitness.append(float(f.split("_")[-1].split(".txt")[0]))
+            except:
+                print "Exception occurred while reading best agent from file: "+f
     best_fitness = sorted(fitness)[0]
     return read_agent([f for f in os.listdir("./out/") if str(best_fitness) in f][0])
 
@@ -160,11 +169,18 @@ def solve_with_best():
     agent.solve_mazes()
 
 
-def compare_evolution(self, evol_path, non_evol_path):
+def compare_evolution(evol_path, non_evol_path):
     
     try:
         evol_file = open(evol_path, 'r')
         non_evol_file = open(non_evol_path, 'r')
+
+        for line in evol_file:
+            if "AVERAGE" in file:
+
+        for line in non_evol_path:
+            print line
+
     except Exception as e:
         return e
 
@@ -184,16 +200,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Maze parameters')
     # Population size
     parser.add_argument('-p', type=int, dest='population_size', 
-        default=150, help='Argument for population size.')
+        default=20, help='Argument for population size.')
     # Agent size
     parser.add_argument('-a', type=int, dest='agent_size',
         default=25, help='Argument for the agent size parameter.')
     # Number of generations
     parser.add_argument('-g', type=int, dest='gen_number',
-        default=500, help='Argument for number of generations')
+        default=5, help='Argument for number of generations')
     # Elite size
     parser.add_argument('-e', type=int, dest='elite_size',
-        default=15, help='Argument for elite size')
+        default=5, help='Argument for elite size')
 
     args = parser.parse_args()
 
@@ -204,11 +220,11 @@ if __name__ == "__main__":
                       args.elite_size)
 
     # Execute evolution algorithm
-    maze.execute(True)
+    #maze.execute(True)
     #Execute non evolution algorithm
-    maze.execute(False)
+    #maze.execute(False)
 
     # Compare both solutions
-    compare_evolution()
+    print compare_evolution(maze.stats_path_evol, maze.stats_path_non_evol)
 
     # solve_with_best()
