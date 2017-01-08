@@ -84,7 +84,7 @@ class Agent:
          try running the script from the terminal instead of PyCharm."""
         af = 0
         for m in mazes.mazes_train:
-            af += simulate(m, self, verbose=False, graphics=graphics, max_iter=100)
+            af += simulate(m, self, verbose=True, graphics=graphics, max_iter=200)
         self.fitness = af / len(mazes.mazes_train)
         return self.fitness
 
@@ -116,7 +116,7 @@ class Agent:
         return self.fitness
 
     def solve_mazes(self):
-        self.compute_fitness(graphics=True)
+        self.compute_fitness(graphics=False)
 
     @staticmethod
     def generate_random(agent_size):
