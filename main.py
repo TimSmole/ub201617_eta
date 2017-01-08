@@ -142,7 +142,10 @@ def read_best_agent():
     fitness = []
     for f in os.listdir("./out/"):
         if os.path.isfile(os.path.join("./out/", f)) and 'agent_' in f:
-            fitness.append(float(f.split("_")[-1].split(".txt")[0]))
+            try:
+                fitness.append(float(f.split("_")[-1].split(".txt")[0]))
+            except:
+                print "Exception occurred while reading best agent from file: "+f
     best_fitness = sorted(fitness)[0]
     return read_agent([f for f in os.listdir("./out/") if str(best_fitness) in f][0])
 
