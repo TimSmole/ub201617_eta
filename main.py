@@ -200,9 +200,10 @@ def compare_evolution(evol_path, non_evol_path):
             return
         for i in range(0, len(avg_fit_ev)):
             print "Generation: "+str(i)
-            print "Evolution is "+str(avg_fit_nev[i]-avg_fit_ev)+" better than random."
-    except:
+            print "Evolution is "+str(avg_fit_nev[i]-avg_fit_ev[i])+" better than random."
+    except Exception as e:
         print "Exception while comparing evolution and random agents."
+        print str(e)
 
 
 
@@ -220,16 +221,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Maze parameters')
     # Population size
     parser.add_argument('-p', type=int, dest='population_size', 
-        default=10, help='Argument for population size.')
+        default=150, help='Argument for population size.')
     # Agent size
     parser.add_argument('-a', type=int, dest='agent_size',
-        default=20, help='Argument for the agent size parameter.')
+        default=25, help='Argument for the agent size parameter.')
     # Number of generations
     parser.add_argument('-g', type=int, dest='gen_number',
-        default=2, help='Argument for number of generations')
+        default=500, help='Argument for number of generations')
     # Elite size
     parser.add_argument('-e', type=int, dest='elite_size',
-        default=5, help='Argument for elite size')
+        default=15, help='Argument for elite size')
 
     args = parser.parse_args()
 
