@@ -6,12 +6,12 @@ from dateutil.parser import parse
 from agent import Agent
 from population import Population, Ranking
 
-population_size = 50
-agent_size = 30
-number_of_generations = 15
-elite_size = 5
+population_size = 150
+agent_size = 25
+number_of_generations = 500
+elite_size = 15
 
-execution_break = "2017-01-07T21:01:00"
+execution_break = "2017-01-08T10:00:00"
 
 # FOR STATS
 best_fitness = []
