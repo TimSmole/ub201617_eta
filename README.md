@@ -64,4 +64,11 @@ If you are running a linux instance, you can install virtualenv wrapper and issu
 
 * A different population size was used to showcase the results. Non evolving agents were used against evolution, to compare average fitness results. From the graphs below, it is clear, that generation after generation, the evolving agents' fitness score was closer to the genetic algorithms limit, than that of a randomized strategy.
 
-![alt tag](https://github.com/TimSmole/ub201617_eta/master/results/avg_compare.png)
+* Agent size = 30
+* Elitism size = 5
+
+* Population size = 50
+![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/avg_compare.png)
+
+* Population size = 100
+![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/worst_compare.png)
