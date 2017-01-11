@@ -5,7 +5,7 @@ You can also install it by command: pip install --upgrade pip enum34
 
 If you are running a linux instance, you can install virtualenv wrapper and issue the following commands:
 
-* pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 # ABOUT THIS PROJECT #
 
@@ -59,3 +59,9 @@ If you are running a linux instance, you can install virtualenv wrapper and issu
 * Agents fitness evolved from generation to generation. Each geneeration jump produced better fitness results.
 * For the termination process, a fixed number of generation alongiside an allogation budget (For testing, a fixed point in time was used).
 * Usage of multithreading was used to achieve faster results (around a 80% faster average computing time).
+
+### Comparison with random agents ###
+
+* A different population size was used to showcase the results. Non evolving agents were used against evolution, to compare average fitness results. From the graphs below, it is clear, that generation after generation, the evolving agents' fitness score was closer to the genetic algorithms limit, than that of a randomized strategy.
+
+![alt tag](https://github.com/TimSmole/ub201617_eta/master/results/avg_compare.png)
