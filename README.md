@@ -78,4 +78,11 @@ If you are running a linux instance, you can install virtualenv wrapper and issu
 * Population size = 50
 ![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/best_compare.png)
 
+* Population size = 50
 ![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/worst_compare.png)
+
+## Conclusion ##
+
+The project took a closer look at how genetic algorithms evolution works. By implementing a simple maze solving problem it was showcased how different scenarios affect the process of evolution of a population.
+
+Se nekej glede rezultatiov, glede cesa smo bli preseneceni...
