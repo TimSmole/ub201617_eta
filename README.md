@@ -73,7 +73,7 @@ If you are running a linux instance, you can install virtualenv wrapper and issu
 ![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/avg_compare.png)
 
 * Population size = 100
-![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/worst_compare.png)
+![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/avg_cmp_100.png)
 
 * Population size = 50
 ![alt tag](https://github.com/TimSmole/ub201617_eta/blob/master/results/best_compare.png)
