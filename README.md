@@ -43,4 +43,19 @@ If you are running a linux instance, you can install virtualenv wrapper and issu
 * The strongest (fittest) individual survive and is used for crossover.
 * This project uses tournament implementation between two individuals.
 
-  
+### Crossover ###
+
+* Crossover is a process of taking more than one parent solutions and producing a child solution from them.
+* Different methods: Single-point crossover, Two-point crossover, Uniform crossover and Half uniform crossover.
+
+### Mutation ###
+
+* A mutation alters one or more gene values in a chromosome
+* It occurs during evolution according to a user-defined probability
+* If a mutation probability is too high, search will turn into a primitive random search.
+
+## Assignment results ##
+
+* Agents fitness evolved from generation to generation. Each geneeration jump produced better fitness results.
+* For the termination process, a fixed number of generation alongiside an allogation budget (For testing, a fixed point in time was used).
+* Usage of multithreading was used to achieve faster results (around a 80% faster average computing time).
